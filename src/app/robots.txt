@@ -1,0 +1,8 @@
+# See https://www.robotstxt.org/robotstxt.html for syntax and more information
+# This file instructs search engine crawlers. It is not a security measure.
+# Sensitive paths should be protected by authentication and authorization.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.tradinta.com/sitemap.xml

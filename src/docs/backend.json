@@ -1,0 +1,1532 @@
+
+{
+  "entities": {
+    "MediaAsset": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "MediaAsset",
+        "type": "object",
+        "description": "Represents an uploaded media file in the library.",
+        "properties": {
+            "id": { "type": "string" },
+            "title": { "type": "string", "description": "An optional, searchable title for the asset." },
+            "imageUrl": { "type": "string", "format": "uri" },
+            "uploadedBy": { "type": "string", "description": "The UID of the user who uploaded the asset." },
+            "uploadedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "imageUrl", "uploadedBy", "uploadedAt"]
+    },
+    "ShortLink": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "ShortLink",
+        "type": "object",
+        "description": "Represents a shortened URL for tracking clicks.",
+        "properties": {
+            "id": { "type": "string", "description": "The unique short code." },
+            "destinationUrl": { "type": "string", "format": "uri", "description": "The full URL the user will be redirected to." },
+            "partnerId": { "type": "string", "description": "The ID of the Growth Partner who created the link." },
+            "campaign": { "type": "string", "description": "An optional tag for grouping links." },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "clickCount": { "type": "number", "default": 0 }
+        },
+        "required": ["id", "destinationUrl", "partnerId", "createdAt"]
+    },
+    "JobOpening": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "JobOpening",
+        "type": "object",
+        "description": "Represents a job vacancy at Tradinta.",
+        "properties": {
+            "id": { "type": "string" },
+            "title": { "type": "string" },
+            "slug": { "type": "string" },
+            "department": { "type": "string" },
+            "location": { "type": "string" },
+            "type": { "type": "string", "enum": ["Full-time", "Part-time", "Contract", "Internship"] },
+            "experienceLevel": { "type": "string", "enum": ["Entry-level", "Mid-level", "Senior", "Lead", "Manager"] },
+            "salary": { "type": "string", "description": "A display string for salary, e.g., 'KES 50,000 - 70,000' or 'Competitive'." },
+            "description": { "type": "string" },
+            "responsibilities": { "type": "array", "items": { "type": "string" } },
+            "qualifications": { "type": "array", "items": { "type": "string" } },
+            "status": { "type": "string", "enum": ["Draft", "Open", "Closed", "Archived"], "default": "Draft" },
+            "createdAt": { "type": "string", "format": "date-time" },
+            "publishedAt": { "type": "string", "format": "date-time" },
+            "applicationDeadline": { "type": "string", "format": "date-time" },
+            "hiringManager": { "type": "string", "description": "Internal reference to the hiring manager's name or ID." }
+        },
+        "required": ["id", "title", "slug", "department", "location", "type", "description", "status"]
+    },
+    "LinkClick": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "LinkClick",
+        "type": "object",
+        "description": "Represents a single click on a tracked referral link.",
+        "properties": {
+            "id": { "type": "string" },
+            "referrerId": { "type": "string", "description": "The tradintaId of the user who shared the link." },
+            "shortLinkId": { "type": "string", "description": "The ID of the shortlink that was clicked." },
+            "campaign": { "type": "string", "description": "An optional tag for grouping clicks, inherited from the ShortLink." },
+            "targetUrl": { "type": "string", "description": "The destination URL the user was redirected to." },
+            "timestamp": { "type": "string", "format": "date-time" },
+            "userAgent": { "type": "string" }
+        },
+        "required": ["id", "referrerId", "targetUrl", "timestamp"]
+    },
+    "Manufacturer": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Manufacturer",
+      "type": "object",
+      "description": "Represents a manufacturer on the Tradinta platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the manufacturer entity."
+        },
+        "shopId": {
+          "type": "string",
+          "description": "Short, URL-friendly unique identifier for the shop."
+        },
+        "shopName": {
+          "type": "string",
+          "description": "Name of the manufacturing company."
+        },
+        "slug": {
+          "type": "string",
+          "description": "URL-friendly slug for the manufacturer's profile page."
+        },
+        "tagline": {
+          "type": "string",
+          "description": "A short, catchy slogan for the shop."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the manufacturer and their products."
+        },
+        "logoUrl": { "type": "string", "format": "uri" },
+        "coverImageUrl": { "type": "string", "format": "uri" },
+        "galleryImages": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "searchKeywords": {
+          "type": "array",
+          "description": "A denormalized list of lowercase keywords for efficient searching.",
+          "items": { "type": "string" }
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the manufacturer.",
+          "format": "email"
+        },
+        "contactEmail": {
+            "type": "string",
+            "description": "Public contact email address for inquiries.",
+            "format": "email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the manufacturer."
+        },
+        "address": {
+          "type": "string",
+          "description": "Physical address of the manufacturer."
+        },
+        "suspensionDetails": {
+          "type": "object",
+          "description": "Details regarding the suspension of a shop.",
+          "properties": {
+            "isSuspended": {
+              "type": "boolean",
+              "description": "Whether the shop is currently suspended."
+            },
+            "reason": {
+              "type": "string",
+              "description": "The reason for the suspension."
+            },
+            "prohibitions": {
+              "type": "array",
+              "description": "Specific actions the seller is prohibited from doing.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "publicDisclaimer": {
+              "type": "boolean",
+              "description": "If true, a disclaimer is shown on the public profile."
+            }
+          }
+        },
+        "moderation": {
+          "type": "object",
+          "description": "Moderation status for the manufacturer.",
+          "properties": {
+            "isDemoted": {
+              "type": "boolean",
+              "description": "If true, this manufacturer will be negatively ranked in discovery."
+            }
+          }
+        },
+        "rating": {
+          "type": "number"
+        },
+        "website": {
+            "type": "string",
+            "format": "uri"
+        },
+        "facebook": {
+            "type": "string",
+            "format": "uri"
+        },
+        "instagram": {
+            "type": "string",
+            "format": "uri"
+        },
+        "x": {
+            "type": "string",
+            "format": "uri"
+        },
+        "theme": {
+            "type": "string",
+            "description": "Identifier for the selected shop theme (e.g., 'tradinta-blue', 'forest-green')."
+        },
+        "marketingPlanId": {
+            "type": "string",
+            "description": "The ID of the active marketing plan this seller is subscribed to."
+        },
+        "planExpiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp when the current marketing plan expires."
+        }
+      },
+      "required": [
+        "id",
+        "shopName",
+        "shopId",
+        "slug",
+        "description",
+        "email",
+        "phone",
+        "address"
+      ]
+    },
+    "Buyer": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Buyer",
+      "type": "object",
+      "description": "Represents a buyer on the Tradinta platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the buyer entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the buyer (company or individual)."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the buyer.",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number of the buyer."
+        },
+        "address": {
+          "type": "string",
+          "description": "Physical address of the buyer."
+        },
+        "country": {
+          "type": "string",
+          "description": "The country where the buyer is located."
+        },
+        "county": {
+          "type": "string",
+          "description": "The county within Kenya where the buyer is located."
+        },
+        "tradPointsStatus": {
+          "type": "object",
+          "description": "Details regarding the user's status in the TradPoints program.",
+          "properties": {
+            "isBanned": {
+              "type": "boolean",
+              "description": "If true, the user cannot earn or spend points."
+            },
+            "banReason": {
+              "type": "string",
+              "description": "The reason provided by an admin for the ban."
+            }
+          }
+        },
+        "lastClaimedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the last time the user claimed a TradPoints code."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "phone",
+        "address"
+      ]
+    },
+     "Dispute": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Dispute",
+      "type": "object",
+      "description": "Represents a dispute filed by a buyer against a seller for a specific order.",
+      "properties": {
+        "id": { "type": "string" },
+        "orderId": { "type": "string", "description": "The ID of the order being disputed." },
+        "buyerId": { "type": "string" },
+        "buyerName": { "type": "string" },
+        "sellerId": { "type": "string" },
+        "sellerName": { "type": "string" },
+        "reason": { "type": "string", "description": "The primary reason for the dispute (e.g., 'Item not as described', 'Item not received')." },
+        "details": { "type": "string", "description": "A detailed explanation from the buyer." },
+        "status": { "type": "string", "enum": ["Open", "Under Review", "Awaiting Buyer Response", "Awaiting Seller Response", "Resolved"], "default": "Open" },
+        "resolution": { "type": "string", "description": "The final outcome of the dispute, set by an admin." },
+        "fault": { "type": "string", "enum": ["Buyer", "Seller", "None"], "description": "Who was deemed at fault, if anyone." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "resolvedAt": { "type": "string", "format": "date-time" },
+        "attachments": { "type": "array", "items": { "type": "string", "format": "uri" }, "description": "URLs to any evidence submitted." }
+      },
+      "required": ["id", "orderId", "buyerId", "sellerId", "reason", "details", "status", "createdAt"]
+    },
+    "ProductCategory": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ProductCategory",
+      "type": "object",
+      "description": "Represents a product category in the marketplace.",
+      "properties": {
+        "id": { "type": "string", "description": "URL-friendly ID (e.g., 'industrial-supplies')." },
+        "name": { "type": "string", "description": "Display name (e.g., 'Industrial & Manufacturing Supplies')." },
+        "subcategories": { "type": "array", "items": { "type": "string" } },
+        "imageUrl": { "type": "string", "format": "uri" },
+        "imageHint": { "type": "string", "description": "Keywords for AI image search." },
+        "displayOrder": { "type": "number", "description": "Order in which to display the category." }
+      },
+      "required": ["id", "name", "imageUrl", "displayOrder"]
+    },
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product listed on the Tradinta marketplace.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the product entity."
+        },
+        "shopId": {
+          "type": "string",
+          "description": "Reference to Shop. (Relationship: Shop 1:N Product)"
+        },
+        "manufacturerName": {
+            "type": "string",
+            "description": "Denormalized name of the manufacturer for search and display."
+        },
+        "manufacturerSlug": {
+            "type": "string",
+            "description": "Denormalized slug of the manufacturer for URL generation."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the product."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the product image.",
+          "format": "uri"
+        },
+        "bannerUrl": { "type": "string", "format": "uri" },
+        "tags": {
+          "type": "array",
+          "description": "Array of product tags",
+          "items": {
+            "type": "string"
+          }
+        },
+        "searchKeywords": {
+            "type": "array",
+            "description": "A denormalized list of lowercase keywords for efficient searching.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "options": {
+          "type": "array",
+          "description": "Defines the types of variants, e.g., ['Size', 'Color']",
+          "items": {
+            "type": "string"
+          }
+        },
+        "variants": {
+          "type": "array",
+          "description": "List of all product variants.",
+          "items": {
+            "$ref": "#/backend/entities/ProductVariant"
+          }
+        },
+        "material": {
+            "type": "string"
+        },
+        "certifications": {
+            "type": "string"
+        },
+        "packagingDetails": {
+            "type": "string"
+        },
+        "rating": {
+            "type": "number"
+        },
+        "reviewCount": {
+            "type": "number"
+        },
+        "wishlistCount": {
+            "type": "number",
+            "description": "Number of times this product has been added to a wishlist."
+        },
+        "marketingPlanId": {
+            "type": "string",
+            "description": "Overrides the seller's plan for this specific product."
+        },
+         "moderation": {
+          "type": "object",
+          "description": "Moderation status for the product.",
+          "properties": {
+            "isDemoted": {
+              "type": "boolean",
+              "description": "If true, this product will be negatively ranked in discovery."
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "shopId",
+        "name",
+        "description",
+        "imageUrl"
+      ]
+    },
+    "ProductVariant": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ProductVariant",
+      "type": "object",
+      "description": "Represents a specific version of a product (e.g., size, color).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the variant."
+        },
+        "price": {
+          "type": "number",
+          "description": "B2B price of this specific variant."
+        },
+        "retailPrice": {
+            "type": "number",
+            "description": "Optional B2C (Tradinta Direct) price for this variant."
+        },
+        "stock": {
+          "type": "number",
+          "description": "Inventory count for this specific variant."
+        },
+        "sku": {
+          "type": "string",
+          "description": "Stock Keeping Unit for this variant."
+        },
+        "attributes": {
+          "type": "object",
+          "description": "Key-value pairs for the variant options, e.g., {'Size': 'Large', 'Color': 'Red'}.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "weight": {
+          "type": "object",
+          "description": "Weight of this specific variant.",
+          "properties": {
+            "value": { "type": "number" },
+            "unit": { "type": "string", "enum": ["g", "kg", "lb", "oz"] }
+          }
+        },
+        "dimensions": {
+          "type": "object",
+          "description": "Dimensions of this specific variant.",
+          "properties": {
+            "length": { "type": "number" },
+            "width": { "type": "number" },
+            "height": { "type": "number" },
+            "unit": { "type": "string", "enum": ["cm", "in", "m"] }
+          }
+        }
+      },
+      "required": ["id", "price", "stock", "attributes"]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents an order placed on the Tradinta platform, covering both B2B and B2C.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the order entity." },
+        "buyerId": { "type": "string", "description": "Reference to the Buyer who placed the order." },
+        "buyerName": { "type": "string", "description": "Denormalized name of the buyer for quick display." },
+        "sellerId": { "type": "string", "description": "Reference to the Manufacturer who will fulfill the order." },
+        "sellerName": { "type": "string", "description": "Denormalized name of the seller for quick display." },
+        "orderDate": { "type": "string", "format": "date-time", "description": "Date and time the order was placed." },
+        "totalAmount": { "type": "number", "description": "Total amount of the order." },
+        "subtotal": { "type": "number", "description": "The pre-fee amount of the order." },
+        "platformFee": { "type": "number", "description": "The fee charged by the platform for this order." },
+        "processingFee": { "type": "number", "description": "The fee charged by the payment gateway." },
+        "amountPaid": { "type": "number", "description": "The amount that has been paid so far." },
+        "balanceDue": { "type": "number", "description": "The remaining amount to be paid." },
+        "paymentTerm": { "type": "string", "description": "The agreed-upon payment term (e.g., '50_50', 'lpo')." },
+        "lpoUrl": { "type": "string", "format": "uri", "description": "URL to the uploaded LPO document." },
+        "status": { "type": "string", "description": "Current status of the order (e.g., 'Pending Payment', 'Processing', 'Shipped', 'Delivered')." },
+        "items": {
+          "type": "array",
+          "description": "List of all items within the order.",
+          "items": { "$ref": "#/backend/entities/OrderItem" }
+        },
+        "isTradintaDirect": { "type": "boolean", "description": "If true, this is a B2C order fulfilled by Tradinta." },
+        "relatedQuotationId": { "type": "string", "description": "If the order was created from an RFQ, this links to it." },
+        "shippingAddress": { "type": "string", "description": "The full shipping address for the order." }
+      },
+      "required": ["id", "buyerId", "sellerId", "orderDate", "totalAmount", "status", "items"]
+    },
+    "OrderItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "OrderItem",
+      "type": "object",
+      "description": "Represents a specific item within an order.",
+      "properties": {
+        "productId": { "type": "string", "description": "Reference to Product." },
+        "productName": { "type": "string", "description": "Denormalized name of the product." },
+        "quantity": { "type": "number", "description": "Quantity of the product ordered." },
+        "unitPrice": { "type": "number", "description": "Price of a single unit of the product at the time of purchase." },
+        "variantId": { "type": "string", "description": "Optional reference to a specific ProductVariant." },
+        "variantAttributes": { "type": "object", "description": "Denormalized attributes of the variant, e.g., {'Size': 'Large'}." }
+      },
+      "required": ["productId", "productName", "quantity", "unitPrice"]
+    },
+    "Shop": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Shop",
+      "type": "object",
+      "description": "Represents a manufacturer's shop on the Tradinta platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the shop entity (matches manufacturerId)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the shop."
+        },
+        "slug": {
+          "type": "string",
+          "description": "URL-friendly slug for the shop profile."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the shop."
+        },
+        "manufacturerId": {
+          "type": "string",
+          "description": "Reference to Manufacturer. (Relationship: Manufacturer 1:1 Shop)"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "slug",
+        "description",
+        "manufacturerId"
+      ]
+    },
+    "Payment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Payment",
+      "type": "object",
+      "description": "Represents a payment made through TradePay.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the payment entity."
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Reference to Order. (Relationship: Order 1:1 Payment)"
+        },
+        "paymentDate": {
+          "type": "string",
+          "description": "Date and time the payment was made.",
+          "format": "date-time"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of the payment."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Method of payment used (e.g., M-Pesa, card)."
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "Transaction ID from the payment gateway."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the payment (e.g., pending, completed, failed)."
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "paymentDate",
+        "amount",
+        "paymentMethod",
+        "transactionId",
+        "status"
+      ]
+    },
+    "MarketingCampaign": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MarketingCampaign",
+      "type": "object",
+      "description": "Represents a marketing campaign run by a manufacturer.",
+      "properties": {
+        "id": { "type": "string" },
+        "shopId": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["B2B", "B2C_DIRECT"], "default": "B2B" },
+        "promoCode": { "type": "string" },
+        "discountType": { "type": "string", "enum": ["percentage", "fixed"] },
+        "discountValue": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "paused", "expired"] },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "assignedPartnerId": { "type": "string", "description": "Optional UID of a Growth Partner this code is exclusive to." },
+        "usageCount": { "type": "number", "default": 0 }
+      },
+      "required": ["id", "shopId", "name", "type", "discountType", "discountValue", "status"]
+    },
+    "GrowthPartner": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "GrowthPartner",
+      "type": "object",
+      "description": "Represents a Growth Partner's public profile and service offerings.",
+      "properties": {
+          "userId": { "type": "string", "description": "The user ID of the partner." },
+          "bio": { "type": "string", "description": "A short biography about the partner." },
+          "isPublic": { "type": "boolean", "description": "Whether the profile is visible on the public marketplace.", "default": true },
+          "isAcceptingPartnerships": { "type": "boolean", "description": "If the partner is open to new collaborations.", "default": true },
+          "socialLinks": {
+              "type": "object",
+              "properties": {
+                  "website": { "type": "string", "format": "uri" },
+                  "youtube": { "type": "string", "format": "uri" },
+                  "instagram": { "type": "string", "format": "uri" },
+                  "tiktok": { "type": "string", "format": "uri" },
+                  "facebook": { "type": "string", "format": "uri" }
+              }
+          },
+          "followerCounts": {
+              "type": "object",
+              "properties": {
+                  "youtube": { "type": "number" },
+                  "instagram": { "type": "number" },
+                  "tiktok": { "type": "number" },
+                  "facebook": { "type": "number" }
+              }
+          },
+          "services": {
+              "type": "array",
+              "description": "A list of a-la-carte services offered by the partner.",
+              "items": { "$ref": "#/backend/entities/PartnerService" }
+          }
+      },
+      "required": ["userId", "isPublic"]
+    },
+    "PartnerService": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "PartnerService",
+        "type": "object",
+        "description": "A specific promotional service offered by a Growth Partner.",
+        "properties": {
+            "id": { "type": "string" },
+            "partnerId": { "type": "string" },
+            "serviceName": { "type": "string", "description": "e.g., 'Instagram Story Shoutout', 'YouTube Unboxing Video'" },
+            "description": { "type": "string", "description": "Details about what the service includes." },
+            "platform": { "type": "string", "enum": ["Instagram", "YouTube", "TikTok", "Facebook", "Blog", "Other"] },
+            "price": { "type": "number" },
+            "currency": { "type": "string", "default": "KES" }
+        },
+        "required": ["id", "partnerId", "serviceName", "platform", "price", "currency"]
+    },
+    "GrowthPartnerCampaign": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "GrowthPartnerCampaign",
+      "type": "object",
+      "description": "Represents a specific promotional campaign linking a Growth Partner to a Manufacturer.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID for the campaign."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the campaign."
+        },
+        "partnerId": {
+          "type": "string",
+          "description": "The UID of the Growth Partner."
+        },
+        "manufacturerId": {
+          "type": "string",
+          "description": "The UID of the Manufacturer."
+        },
+        "trackingCode": {
+          "type": "string",
+          "description": "Unique code for this partner-manufacturer link."
+        },
+        "commissionRate": {
+          "type": "number",
+          "description": "Commission percentage (e.g., 5 for 5%)."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Active",
+            "Paused",
+            "Finished"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "partnerId",
+        "manufacturerId",
+        "trackingCode",
+        "commissionRate",
+        "status"
+      ]
+    },
+    "AttributedSale": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AttributedSale",
+      "type": "object",
+      "description": "Logs a sale attributed to a Growth Partner.",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "orderId": {
+          "type": "string",
+          "description": "The original order ID."
+        },
+        "partnerId": {
+          "type": "string",
+          "description": "The UID of the Growth Partner."
+        },
+        "campaignId": {
+          "type": "string",
+          "description": "The campaign this sale is attributed to."
+        },
+        "saleAmount": {
+          "type": "number"
+        },
+        "commissionEarned": {
+          "type": "number"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "payoutStatus": {
+          "type": "string",
+          "enum": [
+            "Unpaid",
+            "Paid"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "partnerId",
+        "campaignId",
+        "saleAmount",
+        "commissionEarned",
+        "date",
+        "payoutStatus"
+      ]
+    },
+    "PartnerEarning": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PartnerEarning",
+      "type": "object",
+      "description": "Aggregates a Growth Partner's earnings.",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "partnerId": {
+          "type": "string"
+        },
+        "totalEarnings": {
+          "type": "number"
+        },
+        "paidEarnings": {
+          "type": "number"
+        },
+        "unpaidEarnings": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "partnerId",
+        "totalEarnings",
+        "paidEarnings",
+        "unpaidEarnings"
+      ]
+    },
+     "Payout": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Payout",
+      "type": "object",
+      "description": "Represents a payout of commissions to a Growth Partner.",
+      "properties": {
+        "id": { "type": "string" },
+        "partnerId": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" },
+        "transactionId": { "type": "string" },
+        "status": { "type": "string", "enum": ["Completed", "Failed"] }
+      },
+      "required": ["id", "partnerId", "amount", "date", "status"]
+    },
+    "Quotation": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Quotation",
+      "type": "object",
+      "description": "Represents a Request for Quotation (RFQ) from a buyer to a seller.",
+      "properties": {
+        "id": { "type": "string" },
+        "buyerId": { "type": "string" },
+        "buyerName": { "type": "string" },
+        "sellerId": { "type": "string" },
+        "sellerName": { "type": "string" },
+        "productId": { "type": "string" },
+        "productName": { "type": "string" },
+        "productImageUrl": { "type": "string", "format": "uri" },
+        "source": { "type": "string", "description": "The page source where the quote was initiated (e.g., 'product_page', 'compare')." },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quantity": { "type": "number" },
+              "targetPrice": { "type": "number" }
+            }
+          }
+        },
+        "deliveryAddress": { "type": "string" },
+        "proposedPaymentTerm": { "type": "string" },
+        "technicalRequirements": { "type": "string" },
+        "attachments": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["New", "Responded", "Accepted", "Archived"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "response": {
+            "type": "object",
+            "properties": {
+                "unitPrice": { "type": "number" },
+                "totalPrice": { "type": "number" },
+                "message": { "type": "string" },
+                "respondedAt": { "type": "string", "format": "date-time" }
+            }
+        }
+      },
+      "required": [ "id", "buyerId", "sellerId", "productId", "productName", "status", "createdAt" ]
+    },
+    "Review": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Review",
+      "type": "object",
+      "description": "Represents a product review submitted by a buyer.",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "manufacturerId": { "type": "string" },
+        "buyerId": { "type": "string" },
+        "buyerName": { "type": "string" },
+        "buyerAvatar": { "type": "string", "format": "uri" },
+        "rating": { "type": "number", "minimum": 1, "maximum": 5 },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] }
+      },
+      "required": [ "id", "productId", "manufacturerId", "buyerId", "buyerName", "rating", "comment", "createdAt", "status" ]
+    },
+    "PointsLedgerEvent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PointsLedgerEvent",
+      "type": "object",
+      "description": "An immutable, append-only event representing a change in a user's points balance.",
+      "properties": {
+        "event_id": { "type": "string", "description": "Unique identifier for this event." },
+        "user_id": { "type": "string", "description": "The user ID this event applies to." },
+        "points": { "type": "number", "description": "The number of points awarded or revoked (can be negative)." },
+        "action": { "type": "string", "enum": ["award", "reversal", "adjustment"], "description": "The type of transaction." },
+        "reason_code": {
+          "type": "string",
+          "description": "A machine-readable code for why the points were issued.",
+          "enum": ["SIGNUP_BONUS", "REFERRAL_SUCCESS", "PURCHASE_COMPLETE", "SALE_COMPLETE", "REVIEW_SUBMITTED", "FIVE_STAR_REVIEW_RECEIVED", "PROMOTIONAL_GIFT", "MANUAL_CORRECTION"]
+        },
+        "metadata": { "type": "object", "description": "Additional data, like order ID or referenced event IDs." },
+        "issued_by": { "type": "string", "description": "Identifier for the system or admin that issued the event." },
+        "created_at": { "type": "string", "format": "date-time", "description": "The timestamp of the event." },
+        "event_hash": { "type": "string", "description": "Cryptographic hash of the event's contents for integrity." }
+      },
+      "required": ["event_id", "user_id", "points", "action", "created_at", "event_hash"]
+    },
+    "LedgerBlock": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "LedgerBlock",
+      "type": "object",
+      "description": "A block containing a batch of ledger events, forming a cryptographic chain.",
+      "properties": {
+        "block_number": { "type": "number", "description": "Sequential block number." },
+        "block_hash": { "type": "string", "description": "Cryptographic hash of the block's contents and the previous block's hash." },
+        "prev_hash": { "type": "string", "description": "The hash of the preceding block in the chain." },
+        "merkle_root": { "type": "string", "description": "The Merkle root of all event hashes within this block." },
+        "event_ids": { "type": "array", "items": { "type": "string" }, "description": "An array of event IDs included in this block." },
+        "created_at": { "type": "string", "format": "date-time", "description": "The timestamp when the block was created." }
+      },
+      "required": ["block_number", "block_hash", "prev_hash", "merkle_root", "event_ids", "created_at"]
+    },
+    "FeatureUsage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "FeatureUsage",
+      "type": "object",
+      "description": "Logs a specific feature usage event by a user.",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userRole": { "type": "string" },
+        "feature": { "type": "string", "description": "e.g., 'products:search', 'reviews:reply'" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "metadata": { "type": "object" }
+      },
+      "required": ["id", "userId", "userRole", "feature", "timestamp"]
+    },
+    "Report": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Report",
+      "type": "object",
+      "description": "Represents a user-submitted report about content or behavior.",
+      "properties": {
+        "id": { "type": "string" },
+        "reporterId": { "type": "string" },
+        "reporterName": { "type": "string" },
+        "reportType": { "type": "string", "enum": ["Product", "Review", "Shop"] },
+        "referenceId": { "type": "string" },
+        "reason": { "type": "string" },
+        "details": { "type": "string" },
+        "status": { "type": "string", "enum": ["new", "under_review", "resolved"], "default": "new" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "reporterId", "reportType", "referenceId", "reason", "status", "createdAt"]
+    },
+    "SystemAlert": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SystemAlert",
+      "type": "object",
+      "description": "Represents a system-generated alert for admin attention.",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "description": "A machine-readable key for the alert type (e.g., 'NEW_USER_REPORT')." },
+        "severity": { "type": "string", "enum": ["critical", "warning", "info"] },
+        "message": { "type": "string", "description": "A human-readable summary of the alert." },
+        "status": { "type": "string", "enum": ["new", "acknowledged", "resolved"], "default": "new" },
+        "details": { "type": "object", "description": "Additional context, like a report ID or user ID." },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "type", "severity", "message", "status", "timestamp"]
+    },
+    "PlatformSettings": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PlatformSettings",
+      "type": "object",
+      "description": "Global settings for the Tradinta platform, including points configuration.",
+      "properties": {
+        "platformFee": {
+          "type": "object",
+          "description": "Configuration for the platform transaction fee.",
+          "properties": {
+              "type": { "type": "string", "enum": ["percentage", "fixed"] },
+              "value": { "type": "number" }
+          }
+        },
+        "processingFeePercentage": {
+          "type": "number",
+          "description": "The percentage fee charged by the payment processor (e.g., Paystack)."
+        },
+        "pointsConfig": {
+          "type": "object",
+          "properties": {
+            "buyerSignupPoints": { "type": "number", "description": "Points for a buyer signing up and verifying email." },
+            "buyerPurchasePointsPer10": { "type": "number", "description": "Points a buyer earns for every 10 KES spent." },
+            "buyerReviewPoints": { "type": "number", "description": "Points a buyer earns for submitting a product review." },
+            "buyerReferralPoints": { "type": "number", "description": "Points a referrer earns when a new buyer signs up and verifies." },
+            "sellerVerificationPoints": { "type": "number", "description": "Points a seller earns upon successful profile verification." },
+            "sellerSalePointsPer10": { "type": "number", "description": "Points a seller earns for every 10 KES of sale value." },
+            "sellerFirstProductPoints": { "type": "number", "description": "Points a seller earns for publishing their first product." },
+            "sellerFiveStarReviewPoints": { "type": "number", "description": "Points a seller earns for receiving a 5-star review." },
+            "globalSellerPointMultiplier": { "type": "number", "description": "A global multiplier for points earned by verified sellers from sales." }
+          }
+        },
+        "branding": {
+          "type": "object",
+          "properties": {
+            "wordmarkUrl": { "type": "string", "format": "uri" },
+            "logomarkUrl": { "type": "string", "format": "uri" },
+            "tradintaDirectLogoUrl": { "type": "string", "format": "uri" },
+            "theFoundryLogoUrl": { "type": "string", "format": "uri" }
+          }
+        },
+        "allowUnverifiedUploads": {
+          "type": "boolean",
+          "description": "If true, new sellers can upload products before being fully verified."
+        },
+        "enableTradintaDirect": {
+            "type": "boolean",
+            "description": "If true, the B2C 'Tradinta Direct' functionality is enabled across the platform."
+        },
+        "enableTradePay": {
+            "type": "boolean",
+            "description": "If true, the TradePay wallet and payment system is enabled across the platform."
+        }
+      }
+    },
+    "ClaimCode": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ClaimCode",
+      "type": "object",
+      "description": "Represents a redeemable code for TradPoints.",
+      "properties": {
+        "code": { "type": "string", "description": "The unique 8-character claim code." },
+        "points": { "type": "number", "description": "The number of points this code is worth." },
+        "status": { "type": "string", "enum": ["active", "claimed", "voided"], "description": "The status of the code." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the code was created." },
+        "expiresAt": { "type": "string", "format": "date-time", "description": "Optional expiration date." },
+        "claimedAt": { "type": "string", "format": "date-time", "description": "When the code was claimed." },
+        "claimedBy": { "type": "string", "description": "The user ID of the user who claimed the code." }
+      },
+      "required": ["code", "points", "status", "createdAt"]
+    },
+    "Following": {
+      "title": "Following",
+      "type": "object",
+      "description": "A document representing a follow relationship, stored in a user's `following` subcollection.",
+      "properties": {
+        "type": { "type": "string", "enum": ["manufacturer", "partner"], "description": "The type of entity being followed." },
+        "followedAt": { "type": "string", "format": "date-time", "description": "Timestamp of when the follow action occurred." }
+      },
+      "required": ["type", "followedAt"]
+    },
+    "Follower": {
+      "title": "Follower",
+      "type": "object",
+      "description": "A document representing a follower, stored in an entity's `followers` subcollection.",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the user who is following." },
+        "followedAt": { "type": "string", "format": "date-time", "description": "Timestamp of when the follow action occurred." }
+      },
+      "required": ["userId", "followedAt"]
+    },
+    "ForgingEvent": {
+      "title": "ForgingEvent",
+      "type": "object",
+      "description": "Represents a time-limited, tiered-discount promotional event.",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "sellerId": { "type": "string" },
+        "partnerId": { "type": "string" },
+        "status": { "type": "string", "enum": ["proposed", "active", "finished", "declined"] },
+        "startTime": { "type": "string", "format": "date-time" },
+        "endTime": { "type": "string", "format": "date-time" },
+        "commissionRate": { "type": "number" },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "buyerCount": { "type": "number" },
+              "discountPercentage": { "type": "number" }
+            },
+            "required": ["buyerCount", "discountPercentage"]
+          }
+        },
+        "finalDiscountTier": { "type": "number" }
+      },
+      "required": ["id", "productId", "sellerId", "partnerId", "status", "endTime", "commissionRate", "tiers"]
+    },
+    "Pledge": {
+      "title": "Pledge",
+      "type": "object",
+      "description": "Represents a buyer's commitment to purchase a product during a Forging Event.",
+      "properties": {
+        "id": { "type": "string" },
+        "forgingEventId": { "type": "string" },
+        "buyerId": { "type": "string" },
+        "pledgedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "forgingEventId", "buyerId", "pledgedAt"]
+    },
+    "MarketingPlan": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "MarketingPlan",
+        "type": "object",
+        "description": "Stores pricing and details for a marketing plan tier.",
+        "properties": {
+            "id": { "type": "string", "description": "Unique ID for the plan (e.g., 'lift', 'flow')." },
+            "name": { "type": "string", "description": "The display name of the plan (e.g., 'Tradinta Lift')." },
+            "price": { "type": "number", "description": "The monthly price of the plan." },
+            "currency": { "type": "string", "description": "The currency of the price (e.g., 'KES')." },
+            "features": { "type": "array", "items": { "type": "string" }, "description": "List of feature keys included in this plan." },
+            "goal": { "type": "string", "description": "A short tagline describing the plan's main objective." },
+            "isPopular": { "type": "boolean", "description": "If true, the plan is highlighted as 'Most Popular'." },
+            "requiresSalesContact": { "type": "boolean", "description": "If true, the CTA will be 'Contact Sales' instead of direct purchase." }
+        },
+        "required": ["id", "name", "price", "currency"]
+    },
+    "WishlistItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WishlistItem",
+      "type": "object",
+      "description": "Represents a product in a user's wishlist.",
+      "properties": {
+        "productId": { "type": "string", "description": "The ID of the product." },
+        "addedAt": { "type": "string", "format": "date-time", "description": "Timestamp of when the product was added." }
+      },
+      "required": ["productId", "addedAt"]
+    },
+    "Shipment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Shipment",
+      "type": "object",
+      "description": "Represents a physical shipment for a Tradinta Direct order.",
+      "properties": {
+        "id": { "type": "string" },
+        "orderId": { "type": "string" },
+        "buyerId": { "type": "string" },
+        "shippingAddress": { "type": "string" },
+        "status": { "type": "string", "enum": ["Pending Pickup", "In Transit", "Out for Delivery", "Delivered", "Failed", "Returned"] },
+        "items": { "type": "array", "items": { "$ref": "#/backend/entities/OrderItem" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "shippedAt": { "type": "string", "format": "date-time" },
+        "deliveredAt": { "type": "string", "format": "date-time" },
+        "trackingNumber": { "type": "string" },
+        "logisticsPartner": { "type": "string" }
+      },
+      "required": ["id", "orderId", "buyerId", "shippingAddress", "status", "items", "createdAt"]
+    },
+    "AdSlot": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AdSlot",
+      "type": "object",
+      "description": "Represents a manual override for a specific promotional placement on the site.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique ID for the slot (e.g., 'homepage-product-1')." },
+        "name": { "type": "string", "description": "Human-readable name (e.g., 'Homepage Featured Product Slot 1')." },
+        "type": { "type": "string", "enum": ["product", "manufacturer"], "description": "The type of entity this slot features." },
+        "pinnedEntities": {
+            "type": "array",
+            "description": "A list of entities pinned to this slot.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "string" },
+                    "name": { "type": "string" },
+                    "imageUrl": { "type": "string", "format": "uri" },
+                    "entityType": { "type": "string", "enum": ["product", "manufacturer"] }
+                }
+            }
+        },
+        "expiresAt": { "type": "string", "format": "date-time", "description": "Optional expiration for the manual override." },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "description": "UID of the admin who last updated it." }
+      },
+      "required": ["id", "name", "type"]
+    },
+    "SellerEarning": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SellerEarning",
+      "type": "object",
+      "description": "Aggregates a Seller's earnings.",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "sellerId": {
+          "type": "string"
+        },
+        "totalEarnings": {
+          "type": "number"
+        },
+        "paidEarnings": {
+          "type": "number"
+        },
+        "unpaidEarnings": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "sellerId",
+        "totalEarnings",
+        "paidEarnings",
+        "unpaidEarnings"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/mediaLibrary/{assetId}",
+        "definition": {
+            "entityName": "MediaAsset",
+            "schema": { "$ref": "#/backend/entities/MediaAsset" },
+            "description": "Stores all user-uploaded media assets."
+        }
+      },
+      {
+        "path": "/disputes/{disputeId}",
+        "definition": {
+            "entityName": "Dispute",
+            "schema": { "$ref": "#/backend/entities/Dispute" },
+            "description": "Stores all buyer-seller disputes."
+        }
+      },
+      {
+        "path": "/jobOpenings/{jobId}",
+        "definition": {
+            "entityName": "JobOpening",
+            "schema": { "$ref": "#/backend/entities/JobOpening" },
+            "description": "Stores all job openings for the careers page."
+        }
+      },
+      {
+        "path": "/manufacturers/{manufacturerId}",
+        "definition": {
+          "entityName": "Manufacturer",
+          "schema": {
+            "$ref": "#/backend/entities/Manufacturer"
+          },
+          "description": "Stores manufacturer profiles."
+        }
+      },
+      {
+        "path": "/buyers/{buyerId}",
+        "definition": {
+          "entityName": "Buyer",
+          "schema": {
+            "$ref": "#/backend/entities/Buyer"
+          },
+          "description": "Stores buyer profiles."
+        }
+      },
+      {
+        "path": "/productCategories/{categoryId}",
+        "definition": {
+          "entityName": "ProductCategory",
+          "schema": { "$ref": "#/backend/entities/ProductCategory"},
+          "description": "Stores all product categories for the marketplace."
+        }
+      },
+      {
+        "path": "/shops/{shopId}",
+        "definition": {
+          "entityName": "Shop",
+          "schema": {
+            "$ref": "#/backend/entities/Shop"
+          },
+          "description": "Stores shop profiles."
+        }
+      },
+      {
+        "path": "/manufacturers/{manufacturerId}/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product listings for each manufacturer."
+        }
+      },
+      {
+        "path": "/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Stores order details."
+        }
+      },
+      {
+        "path": "/payments/{paymentId}",
+        "definition": {
+          "entityName": "Payment",
+          "schema": {
+            "$ref": "#/backend/entities/Payment"
+          },
+          "description": "Stores payment details."
+        }
+      },
+      {
+        "path": "/shops/{shopId}/marketingCampaigns/{marketingCampaignId}",
+        "definition": {
+          "entityName": "MarketingCampaign",
+          "schema": {
+            "$ref": "#/backend/entities/MarketingCampaign"
+          },
+          "description": "Stores marketing campaigns for each shop."
+        }
+      },
+      {
+        "path": "/users/{userId}/growthPartnerCampaigns/{campaignId}",
+        "definition": {
+          "entityName": "GrowthPartnerCampaign",
+          "schema": {
+            "$ref": "#/backend/entities/GrowthPartnerCampaign"
+          },
+          "description": "Stores campaigns for Growth Partners, nested under the user for security."
+        }
+      },
+       {
+        "path": "/users/{userId}/services/{serviceId}",
+        "definition": {
+          "entityName": "PartnerService",
+          "schema": {
+            "$ref": "#/backend/entities/PartnerService"
+          },
+          "description": "Stores the specific services offered by a Growth Partner."
+        }
+      },
+      {
+        "path": "/partners/{partnerId}/attributedSales/{saleId}",
+        "definition": {
+          "entityName": "AttributedSale",
+          "schema": {
+            "$ref": "#/backend/entities/AttributedSale"
+          },
+          "description": "Logs sales attributed to a specific partner."
+        }
+      },
+      {
+        "path": "/partnerEarnings/{partnerId}",
+        "definition": {
+          "entityName": "PartnerEarning",
+          "schema": {
+            "$ref": "#/backend/entities/PartnerEarning"
+          },
+          "description": "Aggregates earnings for each Growth Partner."
+        }
+      },
+      {
+        "path": "/sellerEarnings/{sellerId}",
+        "definition": {
+          "entityName": "SellerEarning",
+          "schema": {
+            "$ref": "#/backend/entities/SellerEarning"
+          },
+          "description": "Aggregates earnings for each Seller."
+        }
+      },
+      {
+        "path": "/payouts/{payoutId}",
+        "definition": {
+          "entityName": "Payout",
+          "schema": {
+            "$ref": "#/backend/entities/Payout"
+          },
+          "description": "Stores a record of each payout made to a partner."
+        }
+      },
+      {
+        "path": "/manufacturers/{manufacturerId}/quotations/{quotationId}",
+        "definition": {
+            "entityName": "Quotation",
+            "schema": {
+                "$ref": "#/backend/entities/Quotation"
+            },
+            "description": "Stores RFQs for each manufacturer."
+        }
+      },
+      {
+        "path": "/reviews/{reviewId}",
+        "definition": {
+          "entityName": "Review",
+          "schema": {
+            "$ref": "#/backend/entities/Review"
+          },
+          "description": "Stores all product reviews. A collection group query on this will be needed."
+        }
+      },
+      {
+        "path": "/pointsLedgerEvents/{eventId}",
+        "definition": {
+          "entityName": "PointsLedgerEvent",
+          "schema": { "$ref": "#/backend/entities/PointsLedgerEvent" },
+          "description": "Append-only log of all TradPoint transactions."
+        }
+      },
+      {
+        "path": "/ledgerBlocks/{blockNumber}",
+        "definition": {
+          "entityName": "LedgerBlock",
+          "schema": { "$ref": "#/backend/entities/LedgerBlock" },
+          "description": "Immutable blocks containing batches of ledger events."
+        }
+      },
+      {
+        "path": "/featureUsage/{usageId}",
+        "definition": {
+          "entityName": "FeatureUsage",
+          "schema": { "$ref": "#/backend/entities/FeatureUsage" },
+          "description": "Logs user interactions with specific platform features for analytics."
+        }
+      },
+      {
+        "path": "/reports/{reportId}",
+        "definition": {
+          "entityName": "Report",
+          "schema": { "$ref": "#/backend/entities/Report" },
+          "description": "Stores user-submitted reports for moderation and analysis."
+        }
+      },
+      {
+        "path": "/platformSettings/config",
+        "definition": {
+          "entityName": "PlatformSettings",
+          "schema": { "$ref": "#/backend/entities/PlatformSettings" },
+          "description": "Stores global platform settings like points configuration."
+        }
+      },
+      {
+        "path": "/claimCodes/{code}",
+        "definition": {
+          "entityName": "ClaimCode",
+          "schema": { "$ref": "#/backend/entities/ClaimCode" },
+          "description": "Stores redeemable codes for TradPoints."
+        }
+      },
+      {
+        "path": "/users/{userId}/following/{targetId}",
+        "definition": {
+          "entityName": "Following",
+          "schema": { "$ref": "#/backend/entities/Following" },
+          "description": "Subcollection storing entities a user is following."
+        }
+      },
+       {
+        "path": "/users/{userId}/wishlist/{productId}",
+        "definition": {
+          "entityName": "WishlistItem",
+          "schema": { "$ref": "#/backend/entities/WishlistItem" },
+          "description": "Subcollection storing products a user has wishlisted."
+        }
+      },
+      {
+        "path": "/manufacturers/{manufacturerId}/followers/{userId}",
+        "definition": {
+          "entityName": "Follower",
+          "schema": { "$ref": "#/backend/entities/Follower" },
+          "description": "Subcollection storing users who follow a manufacturer."
+        }
+      },
+      {
+        "path": "/partners/{partnerId}/followers/{userId}",
+        "definition": {
+          "entityName": "Follower",
+          "schema": { "$ref": "#/backend/entities/Follower" },
+          "description": "Subcollection storing users who follow a growth partner."
+        }
+      },
+      {
+        "path": "/forgingEvents/{eventId}",
+        "definition": {
+          "entityName": "ForgingEvent",
+          "schema": { "$ref": "#/backend/entities/ForgingEvent" },
+          "description": "Stores all active and past forging events."
+        }
+      },
+      {
+        "path": "/pledges/{pledgeId}",
+        "definition": {
+          "entityName": "Pledge",
+          "schema": { "$ref": "#/backend/entities/Pledge" },
+          "description": "Stores all buyer pledges for forging events."
+        }
+      },
+      {
+        "path": "/marketingPlans/{planId}",
+        "definition": {
+            "entityName": "MarketingPlan",
+            "schema": {
+                "$ref": "#/backend/entities/MarketingPlan"
+            },
+            "description": "Stores details and pricing for marketing plans."
+        }
+      },
+      {
+        "path": "/adSlots/{slotId}",
+        "definition": {
+          "entityName": "AdSlot",
+          "schema": { "$ref": "#/backend/entities/AdSlot" },
+          "description": "Manual override for a promotional placement."
+        }
+      },
+      {
+        "path": "/shortlinks/{linkId}",
+        "definition": {
+            "entityName": "ShortLink",
+            "schema": { "$ref": "#/backend/entities/ShortLink" },
+            "description": "Stores shortened URL mappings."
+        }
+      },
+      {
+          "path": "/linkClicks/{clickId}",
+          "definition": {
+              "entityName": "LinkClick",
+              "schema": { "$ref": "#/backend/entities/LinkClick" },
+              "description": "Logs a click on a referral link."
+          }
+      },
+      {
+          "path": "/shipments/{shipmentId}",
+          "definition": {
+              "entityName": "Shipment",
+              "schema": { "$ref": "#/backend/entities/Shipment" },
+              "description": "Stores details for a physical shipment to be fulfilled."
+          }
+      }
+    ]
+  }
+}

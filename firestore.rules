@@ -1,0 +1,204 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    // --- Helper Functions ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    function hasAnyRole(roles) {
+      // Check for the existence of a 'role' claim on the token
+      return request.auth.token.role in roles;
+    }
+    
+    // --- Publicly Readable Collections ---
+    match /productCategories/{categoryId} {
+        allow get, list: if true;
+        allow write: if hasAnyRole(['admin', 'super-admin', 'content-management']);
+    }
+    
+    match /jobOpenings/{jobId} {
+      allow get, list: if true;
+      allow write: if hasAnyRole(['admin', 'super-admin', 'user-management']);
+    }
+
+    match /marketingPlans/{planId} {
+        allow get, list: if true;
+        allow write: if hasAnyRole(['admin', 'super-admin', 'marketing-manager']);
+    }
+    
+    match /homepageBanners/{bannerId} {
+        allow get, list: if true;
+        allow write: if hasAnyRole(['admin', 'super-admin', 'content-management']);
+    }
+    
+    match /blogPosts/{postId} {
+        allow get, list: if true;
+        allow write: if hasAnyRole(['admin', 'super-admin', 'content-management']);
+    }
+    
+    match /sitePages/{pageId} {
+        allow get: if true;
+        allow write: if hasAnyRole(['admin', 'super-admin', 'content-management']);
+    }
+    
+    match /platformSettings/{docId} {
+       allow get: if true;
+       allow write: if hasAnyRole(['admin', 'super-admin']);
+    }
+
+    match /mediaLibrary/{assetId} {
+        allow read: if true;
+        allow create: if hasAnyRole(['admin', 'super-admin', 'content-management']);
+        allow delete: if hasAnyRole(['admin', 'super-admin', 'content-management']);
+    }
+    
+    // --- User-Centric Collections ---
+    match /users/{userId} {
+      allow read: if isOwner(userId) || hasAnyRole(['admin', 'super-admin', 'user-management']);
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isOwner(userId) || hasAnyRole(['admin', 'super-admin', 'user-management']);
+      allow delete: if hasAnyRole(['admin', 'super-admin', 'user-management']);
+      
+      // Buyer's copy of their own quotations
+      match /quotations/{quotationId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      match /wishlist/{productId} {
+          allow read, write, delete: if isOwner(userId);
+      }
+      
+      // A user can read/write to their own conversations
+      match /conversations/{conversationId} {
+         allow read, write: if isOwner(userId) || hasAnyRole(['admin', 'super-admin', 'support']);
+        
+        match /messages/{messageId} {
+           allow read, write: if isOwner(userId) || hasAnyRole(['admin', 'super-admin', 'support']);
+        }
+      }
+      
+      // User can manage their own active sessions
+      match /sessions/{sessionId} {
+        allow read, list, create, delete: if isOwner(userId);
+      }
+    }
+    
+     // --- Seller-Centric Collections ---
+    match /manufacturers/{manufacturerId} {
+      allow get, list: if true; // Publicly readable shop profile
+      allow create: if isOwner(manufacturerId) && request.resource.data.verificationStatus == 'Unsubmitted'; // CRITICAL FIX: Prevent setting status on create
+      allow update: if isOwner(manufacturerId) || hasAnyRole(['admin', 'super-admin']);
+      
+      match /products/{productId} {
+        allow get, list: if true;
+        allow create, update, delete: if isOwner(manufacturerId) || hasAnyRole(['admin', 'super-admin']);
+      }
+      
+      // Quotations received by a seller
+      match /quotations/{quotationId} {
+        // Any signed-in user can CREATE an RFQ for a seller
+        allow create: if isSignedIn();
+        // Only the seller or an admin can read or update it
+        allow read, update, delete: if isOwner(manufacturerId) || hasAnyRole(['admin', 'super-admin']);
+      }
+      
+      match /marketingCampaigns/{campaignId} {
+        allow read, write, delete: if isOwner(manufacturerId) || hasAnyRole(['admin', 'super-admin']);
+      }
+      
+      // A seller can read/write to their own conversations
+      match /conversations/{conversationId} {
+        allow read, write: if isOwner(manufacturerId) || hasAnyRole(['admin', 'super-admin', 'support']);
+        
+        match /messages/{messageId} {
+           allow read, write: if isOwner(manufacturerId) || hasAnyRole(['admin', 'super-admin', 'support']);
+        }
+      }
+    }
+
+    // --- Transactional & System Collections ---
+    match /orders/{orderId} {
+      allow get: if isSignedIn() && (
+          resource.data.buyerId == request.auth.uid ||
+          resource.data.sellerId == request.auth.uid ||
+          hasAnyRole(['admin', 'super-admin', 'operations-manager', 'support', 'finance'])
+      );
+      allow list: if hasAnyRole(['admin', 'super-admin', 'operations-manager', 'support', 'finance']); // CRITICAL FIX: Removed public list access
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && (
+          request.resource.data.buyerId == request.auth.uid ||
+          hasAnyRole(['admin', 'super-admin', 'operations-manager'])
+      );
+    }
+    
+    match /pledges/{pledgeId} {
+      allow create: if isSignedIn() && request.resource.data.buyerId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.buyerId == request.auth.uid;
+      // CRITICAL FIX: Removed insecure list rule.
+      allow list: if false; 
+    }
+    
+    match /supportTickets/{ticketId} {
+      allow create: if isSignedIn() || hasAnyRole(['admin', 'super-admin', 'support']);
+      allow list: if hasAnyRole(['admin', 'super-admin', 'support']);
+      allow get: if isSignedIn() && (
+          resource.data.userId == request.auth.uid || 
+          hasAnyRole(['admin', 'super-admin', 'support'])
+      );
+      allow update: if hasAnyRole(['admin', 'super-admin', 'support']);
+
+      match /replies/{replyId} {
+          allow read, write: if isSignedIn() && (
+            get(/databases/$(database)/documents/supportTickets/$(ticketId)).data.userId == request.auth.uid ||
+            hasAnyRole(['admin', 'super-admin', 'support'])
+          );
+      }
+    }
+
+    match /disputes/{disputeId} {
+        // Allow Support/Operations/Admin roles to view all disputes
+        allow read: if isSignedIn() && hasAnyRole(['admin', 'super-admin', 'operations-manager', 'support']);
+        
+        // Mediate/Close action requires write permission, which should be restricted
+        allow write: if isSignedIn() && hasAnyRole(['admin', 'super-admin', 'operations-manager']);
+    }
+    
+    match /activityLogs/{logId} {
+      allow read: if hasAnyRole(['admin', 'super-admin']);
+      allow write: if false; 
+    }
+    
+    match /reports/{reportId} {
+      allow create: if isSignedIn();
+      allow read, update, delete: if hasAnyRole(['admin', 'super-admin', 'operations-manager']);
+    }
+    
+    match /systemAlerts/{alertId} {
+       allow read, write: if hasAnyRole(['admin', 'super-admin', 'operations-manager']);
+    }
+    
+    match /pointsLedgerEvents/{eventId} {
+        allow get: if isSignedIn() && resource.data.user_id == request.auth.uid;
+        allow list: if isSignedIn() && request.query.user_id == request.auth.uid;
+        allow write: if false;
+    }
+
+    match /sellerEarnings/{sellerId} {
+        allow get: if isOwner(sellerId) || hasAnyRole(['admin', 'super-admin', 'finance']);
+        allow write: if hasAnyRole(['admin', 'super-admin', 'finance']);
+    }
+    
+    // --- Fallback Rule ---
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

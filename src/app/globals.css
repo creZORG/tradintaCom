@@ -1,0 +1,208 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 210 40% 98%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 210 40% 98%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 221 83% 53%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 25 95% 53%;
+    --radius: 0.5rem;
+    --chart-1: 25 95% 53%;
+    --chart-2: 221 83% 53%;
+    --chart-3: 210 40% 96.1%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-accent: 25 95% 53%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-ring: 25 95% 53%;
+  }
+  .dark {
+    --background: 220 40% 5%;
+    --foreground: 210 40% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 25 95% 53%;
+    --radius: 0.5rem;
+    --chart-1: 25 95% 53%;
+    --chart-2: 217 91.2% 59.8%;
+    --chart-3: 217.2 32.6% 17.5%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 25 95% 53%;
+    --sidebar-ring: 25 95% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  .prose {
+    @apply max-w-none text-foreground;
+  }
+  .prose h1 {
+    @apply text-3xl font-bold font-headline mt-8 mb-4;
+  }
+  .prose h2 {
+    @apply text-2xl font-bold font-headline mt-6 mb-3 border-b pb-2;
+  }
+  .prose h3 {
+    @apply text-xl font-bold mt-4 mb-2;
+  }
+  .prose p {
+    @apply leading-7 my-4;
+  }
+  .prose a {
+    @apply text-primary underline;
+  }
+  .prose strong {
+    @apply font-bold;
+  }
+  .prose em {
+    @apply italic;
+  }
+  .prose blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+  }
+  .prose ul {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+  .prose ol {
+    @apply my-6 ml-6 list-decimal [&>li]:mt-2;
+  }
+}
+
+@layer base {
+  /* Default Theme (matches globals.css) */
+  :root {
+    --shop-primary: hsl(var(--primary));
+    --shop-primary-foreground: hsl(var(--primary-foreground));
+    --shop-secondary: hsl(var(--secondary));
+    --shop-secondary-foreground: hsl(var(--secondary-foreground));
+    --shop-accent: hsl(var(--accent));
+    --shop-accent-foreground: hsl(var(--accent-foreground));
+  }
+  
+  .tradinta-blue {
+    --shop-primary: 199 89% 53%; /* hsl(199, 89%, 53%) -> #29ABE2 */
+    --shop-primary-foreground: 210 40% 98%;
+    --shop-secondary: 192 100% 95%; /* hsl(192, 100%, 95%) -> #E0F7FA */
+    --shop-secondary-foreground: 222 47% 11%;
+    --shop-accent: 175 80% 51%; /* hsl(175, 80%, 51%) -> #2EE6D6 */
+    --shop-accent-foreground: 210 40% 98%;
+  }
+
+  .forest-green {
+    --shop-primary: 142 76% 36%;
+    --shop-primary-foreground: 142 76% 96%;
+    --shop-secondary: 150 14% 85%;
+    --shop-secondary-foreground: 144 26% 25%;
+    --shop-accent: 142 76% 36%;
+    --shop-accent-foreground: 142 76% 96%;
+  }
+  
+  .royal-crimson {
+    --shop-primary: 347 77% 49%;
+    --shop-primary-foreground: 347 77% 95%;
+    --shop-secondary: 356 20% 86%;
+    --shop-secondary-foreground: 349 61% 29%;
+    --shop-accent: 347 77% 49%;
+    --shop-accent-foreground: 347 77% 95%;
+  }
+
+  .midnight-gold {
+    --shop-primary: 45 100% 51%;
+    --shop-primary-foreground: 45 100% 10%;
+    --shop-secondary: 240 5% 26%;
+    --shop-secondary-foreground: 240 5% 90%;
+    --shop-accent: 45 100% 51%;
+    --shop-accent-foreground: 45 100% 10%;
+  }
+}
+
+/* Disintegration Animation */
+@keyframes disintegrate-out {
+  0% { 
+    transform: translateX(0);
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  }
+  50% {
+    transform: translateX(5px) rotate(2deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(50px) rotate(10deg);
+    opacity: 0;
+    clip-path: polygon(50% 0, 60% 20%, 100% 40%, 70% 60%, 80% 80%, 50% 100%, 30% 80%, 20% 60%, 0 40%, 40% 20%);
+  }
+}
+
+@keyframes disintegrate-in {
+  0% {
+    transform: translateX(-50px) rotate(-10deg);
+    opacity: 0;
+    clip-path: polygon(50% 0, 60% 20%, 100% 40%, 70% 60%, 80% 80%, 50% 100%, 30% 80%, 20% 60%, 0 40%, 40% 20%);
+  }
+  50% {
+    transform: translateX(-5px) rotate(-2deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  }
+}
+
+.disintegrate-in {
+  display: inline-block;
+  animation: disintegrate-in 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.disintegrate-out {
+  display: inline-block;
+  animation: disintegrate-out 0.7s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}

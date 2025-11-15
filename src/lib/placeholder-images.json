@@ -1,0 +1,34 @@
+{
+  "placeholderImages": [
+    {
+      "id": "product1",
+      "description": "Bags of industrial cement stacked on a pallet.",
+      "imageUrl": "https://images.unsplash.com/photo-1672541298906-4aeb3edd3520?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjb25zdHJ1Y3Rpb24lMjBjZW1lbnR8ZW58MHx8fHwxNzYxMjQwNjgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "construction cement"
+    },
+    {
+      "id": "product2",
+      "description": "A large sack of commercial baking flour.",
+      "imageUrl": "https://images.unsplash.com/photo-1701283445983-645a73a17f57?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmbG91ciUyMHNhY2t8ZW58MHx8fHwxNzYxMjQwNjgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "flour sack"
+    },
+    {
+      "id": "product3",
+      "description": "A close-up of white HDPE plastic pellets.",
+      "imageUrl": "https://images.unsplash.com/photo-1579084069566-2de365bfe9fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwbGFzdGljJTIwcGVsbGV0c3xlbnwwfHx8fDE3NjEyNDA2ODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "plastic pellets"
+    },
+    {
+      "id": "product4",
+      "description": "Large rolls of recycled kraft paper in a warehouse.",
+      "imageUrl": "https://images.unsplash.com/photo-1647577470961-8af11564a839?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwYXBlciUyMHJvbGxzfGVufDB8fHx8MTc2MTI0MDY4M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "paper rolls"
+    },
+    {
+      "id": "product5",
+      "description": "Large containers of yellow cooking oil.",
+      "imageUrl": "https://images.unsplash.com/photo-1676751926100-ae4228ba0da4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjb29raW5nJTIwb2lsfGVufDB8fHx8MTc2MTMwMjE3Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cooking oil"
+    }
+  ]
+}
