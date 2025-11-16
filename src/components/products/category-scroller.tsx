@@ -1,8 +1,9 @@
 
+
 'use client';
 
 import * as React from 'react';
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { getProductCategories, type ProductCategory } from '@/app/lib/data';
 import Image from 'next/image';
@@ -65,41 +66,33 @@ export function CategoryScroller() {
     
     const renderSkeleton = (count: number) => (
         Array.from({ length: count }).map((_, i) => (
-             <Skeleton key={i} className="h-24 w-64 rounded-2xl" />
+             <Skeleton key={i} className="h-40 w-60 rounded-xl" />
         ))
     );
     
     const renderCategoryCard = (category: ProductCategory) => {
         const features = featuredContent[category.id] || [];
-        // If there are multiple advertisers, pick one at random to display
         const displayFeature = features.length > 0
             ? features[Math.floor(Math.random() * features.length)]
             : { imageUrl: category.imageUrl, href: `/category/${category.id}` };
 
         return (
-            <Link key={category.id} href={displayFeature.href} className="block">
+            <Link key={category.id} href={displayFeature.href} className="block shrink-0">
                 <Card 
-                    className="shrink-0 cursor-pointer group bg-muted/50 hover:bg-muted transition-shadow duration-300 border rounded-2xl shadow-lg hover:shadow-primary/30 w-64"
+                    className="group w-60 overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
-                    <div className="flex items-center justify-between gap-4 p-4">
-                        <div className="flex items-center gap-4">
-                            <div className="relative w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0">
-                                <Image 
-                                    src={displayFeature.imageUrl || `https://picsum.photos/seed/${category.id}/128/128`} 
-                                    alt={category.name} 
-                                    fill 
-                                    className="object-cover" 
-                                    data-ai-hint={category.imageHint}
-                                />
-                            </div>
-                            <div className="text-card-foreground">
-                                <h4 className="font-bold text-lg leading-tight">{category.name}</h4>
-                                <p className="text-sm text-muted-foreground">{productCounts[category.name]?.toLocaleString() || 0} items</p>
-                            </div>
-                        </div>
-                        <div className="text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-transform">
-                            <ArrowRight className="w-5 h-5" />
-                        </div>
+                    <div className="relative h-24 w-full">
+                        <Image 
+                            src={displayFeature.imageUrl || `https://picsum.photos/seed/${category.id}/400/200`} 
+                            alt={category.name} 
+                            fill 
+                            className="object-cover transition-transform duration-300 group-hover:scale-105" 
+                            data-ai-hint={category.imageHint}
+                        />
+                    </div>
+                    <div className="p-4 bg-background">
+                         <h4 className="font-bold text-base leading-tight truncate group-hover:text-primary transition-colors">{category.name}</h4>
+                         <p className="text-sm text-muted-foreground">{productCounts[category.name]?.toLocaleString() || 0} items</p>
                     </div>
                 </Card>
             </Link>
