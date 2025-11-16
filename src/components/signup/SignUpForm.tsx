@@ -32,9 +32,9 @@ import {
   Gift,
 } from 'lucide-react';
 import {
-  resendVerificationEmail,
   handleSignUpAction,
   sendVerificationEmail,
+  resendVerificationEmail,
 } from '@/app/lib/actions/auth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { type ProductCategory } from '@/app/lib/data';
@@ -437,3 +437,5 @@ export function SignUpForm({
     </div>
   );
 }
+
+    

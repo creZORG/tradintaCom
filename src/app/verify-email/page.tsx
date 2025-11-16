@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
@@ -16,20 +15,19 @@ function VerifyEmailComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
-  const { user: loggedInUser } = useUser(); // Get the currently logged-in user session
+  const { user: loggedInUser } = useUser();
   
   const token = searchParams.get('token');
 
   const [isVerifying, setIsVerifying] = useState(true);
   const [verificationResult, setVerificationResult] = useState<{success: boolean, message: string, verifiedUserId?: string} | null>(null);
+  const [hasBeenVerified, setHasBeenVerified] = useState(false); // New state to prevent re-running logic
   
   useEffect(() => {
-    const checkToken = async () => {
-        if (!token) {
-            setVerificationResult({ success: false, message: 'Invalid or missing verification token. Please request a new link.' });
-            setIsVerifying(false);
-            return;
-        }
+    // Only run the verification if it hasn't been run before
+    if (token && !hasBeenVerified) {
+      const checkToken = async () => {
+        setIsVerifying(true);
         const result = await verifyEmailToken(token);
         
         // Security check: If a user is logged in, ensure the token matches their ID
@@ -43,6 +41,7 @@ function VerifyEmailComponent() {
         }
 
         setIsVerifying(false);
+        setHasBeenVerified(true); // Mark as verified to prevent re-running
         
         if (result.success) {
             toast({
@@ -50,9 +49,14 @@ function VerifyEmailComponent() {
                 description: result.message,
             });
         }
-    };
-    checkToken();
-  }, [token, toast, loggedInUser]);
+      };
+      checkToken();
+    } else if (!token) {
+        setVerificationResult({ success: false, message: 'Invalid or missing verification token. Please request a new link.' });
+        setIsVerifying(false);
+    }
+  }, [token, toast, loggedInUser, hasBeenVerified]);
+
 
   if (isVerifying) {
     return (
@@ -106,3 +110,5 @@ export default function VerifyEmailPage() {
         </div>
     );
 }
+
+    
