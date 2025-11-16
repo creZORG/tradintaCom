@@ -34,6 +34,7 @@ import {
 import {
   resendVerificationEmail,
   handleSignUpAction,
+  sendVerificationEmail,
 } from '@/app/lib/actions/auth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { type ProductCategory } from '@/app/lib/data';
@@ -161,7 +162,10 @@ export function SignUpForm({
     if (!userIdForResend) return;
     setIsResending(true);
     const user = auth.currentUser;
-    if (!user?.email || !user.displayName) return;
+    if (!user?.email || !user.displayName) {
+        setIsResending(false);
+        return;
+    }
 
     const result = await resendVerificationEmail(userIdForResend, user.email, user.displayName);
 
