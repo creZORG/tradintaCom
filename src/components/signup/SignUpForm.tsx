@@ -31,7 +31,7 @@ import {
   Gift,
 } from 'lucide-react';
 import {
-  sendVerificationEmail,
+  resendVerificationEmail,
   handleSignUpAction,
 } from '@/app/lib/actions/auth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -59,6 +59,8 @@ export function SignUpForm({
   const [country, setCountry] = useState('');
   const [county, setCounty] = useState('');
   const [referralCode, setReferralCode] = useState(initialRefCode || '');
+  const [isResending, setIsResending] = React.useState(false);
+  const [userIdForResend, setUserIdForResend] = React.useState<string | null>(null);
 
   const auth = useAuth();
   const router = useRouter();
@@ -105,6 +107,7 @@ export function SignUpForm({
         password
       );
       const user = userCredential.user;
+      setUserIdForResend(user.uid);
 
       // Set user's display name in Auth profile
       await updateProfile(user, { displayName: fullName });
@@ -135,7 +138,7 @@ export function SignUpForm({
       }
       
       // 4. Send verification email (client can trigger this server action)
-      await sendVerificationEmail(user.uid, user.email!, fullName);
+      await resendVerificationEmail(user.uid);
       
       // 5. Clear local storage and update UI
       localStorage.removeItem('attributionData');
@@ -152,6 +155,26 @@ export function SignUpForm({
       setIsLoading(false);
     }
   };
+  
+  const handleResend = async () => {
+    if (!userIdForResend) return;
+    setIsResending(true);
+    const result = await resendVerificationEmail(userIdForResend);
+    if (result.success) {
+      toast({
+        title: "Verification Email Sent",
+        description: "A new link has been sent to your email address.",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: result.message,
+        variant: "destructive",
+      });
+    }
+    setIsResending(false);
+  };
+
 
   if (isSuccess) {
     return (
@@ -165,7 +188,11 @@ export function SignUpForm({
             <AlertDescription>
               We've sent a verification link to <strong>{email}</strong>.
               Please click the link in the email to activate your Tradinta
-              account.
+              account. Didn't receive it?
+              <Button variant="link" className="p-0 h-auto ml-1" onClick={handleResend} disabled={isResending}>
+                 {isResending ? <Loader2 className="mr-1 h-4 w-4 animate-spin"/> : null}
+                 Resend link
+              </Button>
             </AlertDescription>
           </Alert>
           <Button asChild>
