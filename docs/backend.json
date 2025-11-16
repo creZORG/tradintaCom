@@ -302,7 +302,8 @@
         "subcategories": { "type": "array", "items": { "type": "string" } },
         "imageUrl": { "type": "string", "format": "uri" },
         "imageHint": { "type": "string", "description": "Keywords for AI image search." },
-        "displayOrder": { "type": "number", "description": "Order in which to display the category." }
+        "displayOrder": { "type": "number", "description": "Order in which to display the category." },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["id", "name", "imageUrl", "displayOrder"]
     },
