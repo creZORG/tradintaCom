@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -123,9 +124,9 @@ export function SignUpForm({
         email: user.email!,
         fullName,
         role,
-        businessName: role === 'manufacturer' ? businessName : '',
-        country,
-        county,
+        businessName: role === 'manufacturer' ? businessName : undefined,
+        country: country || undefined,
+        county: county || undefined,
         attributionData,
         referralCode: referralCode || attributionData.ref || null,
       };
@@ -138,7 +139,7 @@ export function SignUpForm({
       }
       
       // 4. Send verification email (client can trigger this server action)
-      await resendVerificationEmail(user.uid);
+      await sendVerificationEmail(user.uid, user.email!, fullName);
       
       // 5. Clear local storage and update UI
       localStorage.removeItem('attributionData');
@@ -159,7 +160,11 @@ export function SignUpForm({
   const handleResend = async () => {
     if (!userIdForResend) return;
     setIsResending(true);
-    const result = await resendVerificationEmail(userIdForResend);
+    const user = auth.currentUser;
+    if (!user?.email || !user.displayName) return;
+
+    const result = await resendVerificationEmail(userIdForResend, user.email, user.displayName);
+
     if (result.success) {
       toast({
         title: "Verification Email Sent",

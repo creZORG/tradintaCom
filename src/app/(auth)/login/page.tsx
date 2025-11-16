@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +20,7 @@ import { Mail, LogOut, LayoutDashboard, Loader2, Eye, EyeOff } from "lucide-reac
 import { checkDeviceAndTriggerOtp } from '@/lib/otp';
 import { OtpGate } from '@/components/otp-gate';
 import { logUserSession } from "@/app/dashboards/buyer/actions";
-import { sendVerificationEmail, setUserRoleClaim } from "@/app/lib/actions/auth";
+import { resendVerificationEmail, setUserRoleClaim } from "@/app/lib/actions/auth";
 import { nanoid } from "nanoid";
 
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -46,11 +47,39 @@ const LoginView = ({ onLoginSuccess, onOtpRequired }: { onLoginSuccess: () => vo
   const [showPassword, setShowPassword] = useState(false);
   const [showVerificationAlert, setShowVerificationAlert] = useState(false);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [userIdForResend, setUserIdForResend] = React.useState<string | null>(null);
+  const [isResending, setIsResending] = React.useState(false);
 
   const auth = useAuth();
   const firestore = useFirestore();
   const { toast } = useToast();
   const router = useRouter();
+
+  const handleResend = async () => {
+    if (!userIdForResend) return;
+    setIsResending(true);
+    const user = auth.currentUser;
+    if (!user?.email || !user.displayName) {
+        setIsResending(false);
+        return;
+    };
+
+    const result = await resendVerificationEmail(userIdForResend, user.email, user.displayName);
+    if (result.success) {
+      toast({
+        title: "Verification Email Sent",
+        description: "A new link has been sent to your email address.",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: result.message,
+        variant: "destructive",
+      });
+    }
+    setIsResending(false);
+  };
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +95,7 @@ const LoginView = ({ onLoginSuccess, onOtpRequired }: { onLoginSuccess: () => vo
       
       if (!userCredential.user.emailVerified) {
         setShowVerificationAlert(true);
+        setUserIdForResend(userCredential.user.uid);
         await signOut(auth);
         setIsLoginLoading(false);
         return;
@@ -156,7 +186,11 @@ const LoginView = ({ onLoginSuccess, onOtpRequired }: { onLoginSuccess: () => vo
           <Mail className="h-4 w-4" />
           <AlertTitle>Email Not Verified</AlertTitle>
           <AlertDescription>
-            You must verify your email address before you can log in. Check your inbox for a verification link.
+            You must verify your email address before you can log in.
+             <Button variant="link" className="p-0 h-auto ml-1" onClick={handleResend} disabled={isResending}>
+                 {isResending ? <Loader2 className="mr-1 h-4 w-4 animate-spin"/> : null}
+                 Resend verification link.
+              </Button>
           </AlertDescription>
         </Alert>
       )}
@@ -283,5 +317,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-    

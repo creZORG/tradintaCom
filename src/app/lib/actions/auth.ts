@@ -526,13 +526,13 @@ export async function handleResetPassword(
   }
 }
 
-export async function sendVerificationEmail(userId: string): Promise<void> {
+export async function sendVerificationEmail(
+  userId: string,
+  email: string,
+  name: string
+): Promise<{ success: boolean, message: string }> {
   const db = await getDb();
-  const auth = getAuth();
-
   try {
-    const userRecord = await auth.getUser(userId);
-    const { email, displayName } = userRecord;
 
     if (!email) {
       throw new Error('User does not have an email address.');
@@ -571,7 +571,7 @@ export async function sendVerificationEmail(userId: string): Promise<void> {
                           </tr>
                           <tr>
                               <td style="padding: 40px 30px;">
-                                  <h1 style="color: #333333; font-size: 24px;">Welcome to Tradinta, ${displayName || 'Partner'}!</h1>
+                                  <h1 style="color: #333333; font-size: 24px;">Welcome to Tradinta, ${name}!</h1>
                                   <p style="color: #555555; font-size: 16px; line-height: 1.5;">Thank you for signing up. To complete your registration and secure your account, please verify your email address by clicking the button below:</p>
                                   <p style="text-align: center; margin: 30px 0;">
                                       <a href="${verificationLink}" style="background-color: #1D4ED8; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Verify My Email Address</a>
@@ -600,20 +600,20 @@ export async function sendVerificationEmail(userId: string): Promise<void> {
       subject: 'Verify Your Email Address for Tradinta',
       htmlContent: emailHtml,
     });
+     return { success: true, message: 'Verification email sent.' };
   } catch (error: any) {
     console.error('Error sending verification email:', error);
-    throw new Error('Could not send verification email. ' + error.message);
+    return { success: false, message: 'Could not send verification email.' };
   }
 }
 
-export async function resendVerificationEmail(userId: string): Promise<{ success: boolean, message: string }> {
+export async function resendVerificationEmail(userId: string, email: string, name: string): Promise<{ success: boolean, message: string }> {
     try {
         const userRecord = await getAuth().getUser(userId);
         if (userRecord.emailVerified) {
             return { success: false, message: 'This email address has already been verified.' };
         }
-        await sendVerificationEmail(userId);
-        return { success: true, message: 'A new verification email has been sent.' };
+        return await sendVerificationEmail(userId, email, name);
     } catch (error: any) {
         return { success: false, message: error.message };
     }
@@ -997,7 +997,7 @@ export async function reconcileUserPoints(
           // CRITICAL FIX: Check for self-referral during reconciliation
           if (referredUserDoc.id !== userId) {
             if (referralBonus > 0) {
-              await awardPoints(db, referrerDoc.id, referralBonus, 'REFERRAL_SUCCESS', {
+              await awardPoints(db, userId, referralBonus, 'REFERRAL_SUCCESS', {
                 referredUserId: referredUserDoc.id,
               });
               pointsAwarded += referralBonus;
