@@ -1,19 +1,19 @@
 
-
 'use client';
 
 import * as React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getProductCategories, type ProductCategory } from '@/app/lib/data';
-import Image from 'next/image';
+import { ProductCard } from '@/components/product-card';
+import { Button } from '@/components/ui/button';
+import { type ProductWithRanking } from '@/services/DiscoveryEngine.d';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
-import { Skeleton } from '../ui/skeleton';
-import { getRankedProducts, getFeaturedCategoryContent } from '@/services/DiscoveryEngine';
-import { Button } from '../ui/button';
 import { ArrowRight } from 'lucide-react';
+import { getProductCategories, type ProductCategory } from '@/app/lib/data';
+import { getRankedProducts, getFeaturedCategoryContent } from '@/services/DiscoveryEngine';
+import { Skeleton } from '../ui/skeleton';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type FeaturedContent = {
     imageUrl: string;
@@ -23,8 +23,6 @@ type FeaturedContent = {
 }
 
 export function CategoryScroller() {
-    const router = useRouter();
-    
     const [categories, setCategories] = React.useState<ProductCategory[]>([]);
     const [productCounts, setProductCounts] = React.useState<Record<string, number>>({});
     const [featuredContent, setFeaturedContent] = React.useState<Record<string, FeaturedContent[]>>({});
@@ -90,9 +88,9 @@ export function CategoryScroller() {
                             data-ai-hint={category.imageHint}
                         />
                     </div>
-                    <div className="p-4 bg-background">
-                         <h4 className="font-bold text-base leading-tight truncate group-hover:text-primary transition-colors">{category.name}</h4>
-                         <p className="text-sm text-muted-foreground">{productCounts[category.name]?.toLocaleString() || 0} items</p>
+                    <div className="p-3 bg-background">
+                         <h4 className="font-medium text-sm leading-tight truncate group-hover:text-primary transition-colors">{category.name}</h4>
+                         <p className="text-xs text-muted-foreground">{productCounts[category.name]?.toLocaleString() || 0} items</p>
                     </div>
                 </Card>
             </Link>
