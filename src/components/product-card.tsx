@@ -79,6 +79,7 @@ export function ProductCard({ product, context, source }: ProductCardProps) {
                 <h3 className="font-semibold leading-tight h-10 line-clamp-2 text-sm text-foreground">
                   {product.name}
                 </h3>
+                 <p className="text-xs text-muted-foreground mt-1">by {product.manufacturerName}</p>
                 <div className="flex-grow mt-2">
                     <p className="text-lg font-bold text-foreground">
                         KES {price.toLocaleString()}
@@ -117,7 +118,8 @@ export function ProductCard({ product, context, source }: ProductCardProps) {
                         {product.name}
                     </Link>
                   </h3>
-                   <div className="flex items-baseline justify-between">
+                   <p className="text-xs text-muted-foreground -mt-1">by {product.manufacturerName}</p>
+                   <div className="flex items-baseline justify-between pt-1">
                     <p className="text-lg font-bold text-foreground">
                       {price > 0 ? `KES ${price.toLocaleString()}`: 'Inquire for Price'}
                     </p>
