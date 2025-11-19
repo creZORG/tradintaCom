@@ -64,7 +64,6 @@
             "id": { "type": "string" },
             "referrerId": { "type": "string", "description": "The tradintaId of the user who shared the link." },
             "shortLinkId": { "type": "string", "description": "The ID of the shortlink that was clicked." },
-            "campaign": { "type": "string", "description": "An optional tag for grouping clicks, inherited from the ShortLink." },
             "targetUrl": { "type": "string", "description": "The destination URL the user was redirected to." },
             "timestamp": { "type": "string", "format": "date-time" },
             "userAgent": { "type": "string" }
@@ -303,7 +302,8 @@
         "subcategories": { "type": "array", "items": { "type": "string" } },
         "imageUrl": { "type": "string", "format": "uri" },
         "imageHint": { "type": "string", "description": "Keywords for AI image search." },
-        "displayOrder": { "type": "number", "description": "Order in which to display the category." }
+        "displayOrder": { "type": "number", "description": "Order in which to display the category." },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["id", "name", "imageUrl", "displayOrder"]
     },

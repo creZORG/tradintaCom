@@ -67,13 +67,15 @@ const BrandingTab = () => {
     const brandingRef = useMemoFirebase(() => firestore ? doc(firestore, 'platformSettings', 'config') : null, [firestore]);
     const { data: brandingData, isLoading, forceRefetch } = useDoc(brandingRef);
 
-    const [mainLogoUrl, setMainLogoUrl] = React.useState('');
+    const [wordmarkUrl, setWordmarkUrl] = React.useState('');
+    const [logomarkUrl, setLogomarkUrl] = React.useState('');
     const [directLogoUrl, setDirectLogoUrl] = React.useState('');
     const [foundryLogoUrl, setFoundryLogoUrl] = React.useState('');
     
     React.useEffect(() => {
         if (brandingData?.branding) {
-            setMainLogoUrl(brandingData.branding.mainLogoUrl || '');
+            setWordmarkUrl(brandingData.branding.wordmarkUrl || '');
+            setLogomarkUrl(brandingData.branding.logomarkUrl || '');
             setDirectLogoUrl(brandingData.branding.tradintaDirectLogoUrl || '');
             setFoundryLogoUrl(brandingData.branding.theFoundryLogoUrl || '');
         }
@@ -85,7 +87,8 @@ const BrandingTab = () => {
         try {
             await setDocumentNonBlocking(brandingRef, {
                 branding: {
-                    mainLogoUrl: mainLogoUrl,
+                    wordmarkUrl: wordmarkUrl,
+                    logomarkUrl: logomarkUrl,
                     tradintaDirectLogoUrl: directLogoUrl,
                     theFoundryLogoUrl: foundryLogoUrl,
                 }
@@ -107,32 +110,44 @@ const BrandingTab = () => {
         <Card>
             <CardHeader>
                 <CardTitle>Branding & Logos</CardTitle>
-                <CardDescription>Manage logos for key platform features.</CardDescription>
+                <CardDescription>Manage logos for the main site and key platform features.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
-                 <div className="grid gap-3 max-w-md">
-                    <Label>Main Tradinta Logo</Label>
-                    <p className="text-sm text-muted-foreground">The primary logo used in the site header and throughout the platform.</p>
-                    <PhotoUpload
-                        onUpload={setMainLogoUrl}
-                        initialUrl={mainLogoUrl || "https://i.postimg.cc/NGkTK7Jc/Gemini-Generated-Image-e6p14ne6p14ne6p1-removebg-preview.png"}
-                    />
-                </div>
-                <div className="grid gap-3 max-w-md">
-                    <Label>Tradinta Direct Logo</Label>
-                    <p className="text-sm text-muted-foreground">This logo appears on the Tradinta Direct marketing page and related components.</p>
-                    <PhotoUpload
-                        onUpload={setDirectLogoUrl}
-                        initialUrl={directLogoUrl || "https://i.postimg.cc/hG0TLTyF/image.png"}
-                    />
-                </div>
-                <div className="grid gap-3 max-w-md">
-                    <Label>The Foundry Logo</Label>
-                        <p className="text-sm text-muted-foreground">This logo is used on the Foundry page to represent group-buying deals.</p>
-                    <PhotoUpload
-                        onUpload={setFoundryLogoUrl}
-                        initialUrl={foundryLogoUrl || "https://i.postimg.cc/VkfCYdsM/image.png"}
-                    />
+                 <div className="grid md:grid-cols-2 gap-8">
+                    <div className="grid gap-3">
+                        <Label>Main Wordmark (Full Logo)</Label>
+                        <p className="text-sm text-muted-foreground">The primary logo used in the site header.</p>
+                        <PhotoUpload
+                            onUpload={setWordmarkUrl}
+                            initialUrl={wordmarkUrl || "https://res.cloudinary.com/dlmvoo4fj/image/upload/v1763113453/nygbverafbjxgcu2604c.png"}
+                        />
+                    </div>
+                    <div className="grid gap-3">
+                        <Label>Main Logomark (Icon)</Label>
+                        <p className="text-sm text-muted-foreground">The small icon used for mobile and avatars.</p>
+                        <PhotoUpload
+                            onUpload={setLogomarkUrl}
+                            initialUrl={logomarkUrl || "https://res.cloudinary.com/dlmvoo4fj/image/upload/v1763113614/ybfdmvcyfjrdhdghnxrx.png"}
+                        />
+                    </div>
+                 </div>
+                 <div className="grid md:grid-cols-2 gap-8 pt-8 border-t">
+                    <div className="grid gap-3">
+                        <Label>Tradinta Direct Logo</Label>
+                        <p className="text-sm text-muted-foreground">Used on the Tradinta Direct marketing page.</p>
+                        <PhotoUpload
+                            onUpload={setDirectLogoUrl}
+                            initialUrl={directLogoUrl || "https://i.postimg.cc/hG0TLTyF/image.png"}
+                        />
+                    </div>
+                    <div className="grid gap-3">
+                        <Label>The Foundry Logo</Label>
+                            <p className="text-sm text-muted-foreground">Used on the Foundry page for group-buying deals.</p>
+                        <PhotoUpload
+                            onUpload={setFoundryLogoUrl}
+                            initialUrl={foundryLogoUrl || "https://i.postimg.cc/VkfCYdsM/image.png"}
+                        />
+                    </div>
                 </div>
             </CardContent>
                 <CardFooter>

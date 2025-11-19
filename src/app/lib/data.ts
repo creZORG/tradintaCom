@@ -51,7 +51,7 @@ export type ProductCategory = {
   imageUrl: string;
   imageHint: string;
   displayOrder: number;
-  createdAt?: string; // Changed to string for client components
+  createdAt?: any;
 }
 
 /**
@@ -174,7 +174,6 @@ export const getProductCategories = cache(async (): Promise<ProductCategory[]> =
         for (const key in data) {
             const value = data[key];
             if (value instanceof Timestamp) {
-                // Correctly serialize Timestamp to ISO string
                 plainData[key] = value.toDate().toISOString();
             } else {
                 plainData[key] = value;

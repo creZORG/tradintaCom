@@ -60,7 +60,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   
-  const { wordmarkUrl, logomarkUrl, theFoundryLogoUrl } = await getBrandingLogos();
+  const { wordmarkUrl, logomarkUrl } = await getBrandingLogos();
 
   const websiteStructuredData = {
     '@context': 'https://schema.org',
@@ -127,7 +127,7 @@ export default async function RootLayout({
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
                       <div className="col-span-2 md:col-span-2">
                         <Suspense fallback={<div className="h-10 w-32 bg-muted rounded-md" />}>
-                          <Logo wordmarkUrl={wordmarkUrl} use="wordmark" className="w-32 h-10" />
+                          <Logo use="wordmark" className="w-32 h-10" wordmarkUrl={wordmarkUrl} />
                         </Suspense>
                         <p className="text-muted-foreground mt-3 text-sm max-w-xs">
                           Powering Africa’s manufacturers through digital trade, secure payments, and data-driven growth.
