@@ -116,7 +116,7 @@ export default async function RootLayout({
                   <TopNav wordmarkUrl={wordmarkUrl} logomarkUrl={logomarkUrl} />
                 </Suspense>
                 <SuperAdminSidebar />
-                  <main className="flex-grow pt-16">
+                  <main className="flex-grow">
                      <div className="container mx-auto px-4">
                         {children}
                       </div>
