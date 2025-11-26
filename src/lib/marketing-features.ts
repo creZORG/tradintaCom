@@ -40,7 +40,14 @@ export const MARKETING_FEATURES: FeatureGroup[] = [
             { key: "product:permanent_carousel", defaultText: "Permanent Carousel Slot: Receive a dedicated, permanent slide in the /products page carousel that is always visible." },
             { key: "product:dedicated_analytics", defaultText: "Dedicated Analytics Dashboard: Access a dashboard showing performance of every ad placement for your product." },
         ]
+    },
+    {
+        groupName: "External Advertising & PR",
+        features: [
+            { key: "external:google_ads", defaultText: "Google Ads Management: We manage a targeted Google Search campaign for your top products to drive external traffic." },
+            { key: "external:social_ads", defaultText: "Social Media Ad Credit: Receive a monthly credit to be used for Facebook & Instagram advertising campaigns." },
+            { key: "external:influencer_outreach", defaultText: "Managed Influencer Outreach: We connect you with 2 vetted Growth Partners per quarter for potential collaborations." },
+            { key: "external:press_release", defaultText: "Quarterly Press Release: Your brand and products are featured in a press release distributed to our network of media partners." },
+        ]
     }
 ];
-
-    
